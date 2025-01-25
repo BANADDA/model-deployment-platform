@@ -11,4 +11,5 @@ ENV/
 .idea/
 .vscode/
 *.log
-models/
+models/kubectl
+minikube-linux-amd64
