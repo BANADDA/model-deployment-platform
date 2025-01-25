@@ -13,3 +13,4 @@ ENV/
 *.log
 models/kubectl
 minikube-linux-amd64
+kubectl
