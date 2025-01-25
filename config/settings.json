@@ -1,0 +1,9 @@
+{
+ "api": {
+   "port": 8000,
+   "log_level": "info"
+ },
+ "models": {
+   "base_path": "/app/models"
+ }
+}

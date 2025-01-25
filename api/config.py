@@ -1,22 +1,26 @@
-# api/main.py
+# api/config.py
 
-from fastapi import FastAPI, HTTPException
-from .routers import deployments, health, users
-from .config import Settings
+from pydantic_settings import BaseSettings
+from typing import Dict, Any
 
-app = FastAPI(title="Model Deployment Platform")
-settings = Settings()
-
-app.include_router(health.router, prefix="/health", tags=["health"])
-app.include_router(users.router, prefix="/users", tags=["users"])
-app.include_router(deployments.router, prefix="/deployments", tags=["deployments"])
-
-@app.on_event("startup")
-async def startup_event():
-    # Initialize services
-    pass
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    # Cleanup services
-    pass
+class Settings(BaseSettings):
+    # API Configuration
+    API_VERSION: str = "v1"
+    DEBUG: bool = False
+    
+    # Docker Configuration
+    DOCKER_HOST: str = "unix://var/run/docker.sock"
+    DOCKER_API_VERSION: str = "1.41"
+    
+    # Kubernetes Configuration
+    KUBERNETES_CONTEXT: str = "default"
+    
+    # Model Configuration
+    MODEL_BASE_PATH: str = "/models"
+    DEFAULT_MODEL_CONFIG: Dict[str, Any] = {
+        "max_length": 2048,
+        "temperature": 0.7
+    }
+    
+    class Config:
+        env_file = ".env"

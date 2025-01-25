@@ -1,24 +1,22 @@
-# docker/docker-compose.yml
+# Updated docker/model_server/docker-compose.yml
 version: '3.8'
 
 services:
-  api:
-    build:
-      context: .
-      dockerfile: docker/api/Dockerfile
-    ports:
-      - "8000:8000"
-    environment:
-      - DEBUG=false
-    depends_on:
-      - model-server
+ api:
+   build:
+     context: ..
+     dockerfile: docker/api/Dockerfile
+   ports:
+     - "8000:8000"
+   volumes:
+     - ../config:/app/config
+   environment:
+     - CONFIG_PATH=/app/config/settings.json
 
-  model-server:
-    build:
-      context: .
-      dockerfile: docker/model_server/Dockerfile
-    runtime: nvidia
-    environment:
-      - NVIDIA_VISIBLE_DEVICES=all
-    volumes:
-      - ./models:/app/models
+ model_server:
+   build:
+     context: ..
+     dockerfile: docker/model_server/Dockerfile
+   volumes:
+     - ../models:/app/models
+     - ../config:/app/config

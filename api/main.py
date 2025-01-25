@@ -1,26 +1,19 @@
-# api/config.py
+from fastapi import FastAPI
+from .routers import deployments, health, users, models
+from .config import Settings
 
-from pydantic_settings import BaseSettings
-from typing import Dict, Any
+app = FastAPI(title="Model Deployment Platform")
+settings = Settings()
 
-class Settings(BaseSettings):
-    # API Configuration
-    API_VERSION: str = "v1"
-    DEBUG: bool = False
-    
-    # Docker Configuration
-    DOCKER_HOST: str = "unix://var/run/docker.sock"
-    DOCKER_API_VERSION: str = "1.41"
-    
-    # Kubernetes Configuration
-    KUBERNETES_CONTEXT: str = "default"
-    
-    # Model Configuration
-    MODEL_BASE_PATH: str = "/models"
-    DEFAULT_MODEL_CONFIG: Dict[str, Any] = {
-        "max_length": 2048,
-        "temperature": 0.7
-    }
-    
-    class Config:
-        env_file = ".env"
+app.include_router(health.router)
+app.include_router(users.router, prefix="/users", tags=["users"]) 
+app.include_router(deployments.router, prefix="/deployments", tags=["deployments"])
+app.include_router(models.router, tags=["models"])
+
+@app.on_event("startup")
+async def startup_event():
+   pass
+
+@app.on_event("shutdown") 
+async def shutdown_event():
+   pass
