@@ -59,7 +59,7 @@ print(deployment)
 # Output:
 # {
 #     "deployment_id": "dep_abc123",
-#     "endpoint": "https://api.yourservice.com/v1/dep_abc123",
+#     "endpoint": "https://api.polariscloud.com/v1/dep_abc123",
 #     "status": "running"
 # }
 
