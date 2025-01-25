@@ -1,0 +1,29 @@
+# kubernetes/model_server/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: model-server
+  template:
+    metadata:
+      labels:
+        app: model-server
+    spec:
+      containers:
+      - name: model-server
+        image: model-platform/model-server:latest
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+            memory: "32Gi"
+          requests:
+            memory: "16Gi"
+        env:
+        - name: MODEL_NAME
+          value: ${MODEL_NAME}
+        - name: GPU_CONFIG 
+          value: ${GPU_CONFIG}

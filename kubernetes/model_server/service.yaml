@@ -1,0 +1,13 @@
+# kubernetes/model_server/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: model-server
+spec:
+  selector:
+    app: model-server
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: ClusterIP

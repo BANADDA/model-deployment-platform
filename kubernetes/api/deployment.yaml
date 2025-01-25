@@ -1,0 +1,30 @@
+# kubernetes/api/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: api-deployment
+spec:
+ replicas: 3
+ selector:
+   matchLabels:
+     app: api
+ template:
+   metadata:
+     labels:
+       app: api
+   spec:
+     containers:
+     - name: api
+       image: model-platform/api:latest
+       ports:
+       - containerPort: 8000
+       env:
+       - name: DEBUG
+         value: "false"
+       resources:
+         requests:
+           memory: "256Mi"
+           cpu: "500m"
+         limits:
+           memory: "512Mi"
+           cpu: "1000m"
