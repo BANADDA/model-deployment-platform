@@ -1,15 +1,12 @@
 # Model Deployment Platform
-
-A scalable platform for deploying and managing ML models on polaris network.
+A scalable platform for deploying and managing ML models locally.
 
 ## Prerequisites
 - Python 3.9+
 - Docker & Docker Compose
 - NVIDIA GPU with CUDA support
-- Kubernetes cluster access
 
 ## Installation
-
 ```bash
 # Clone repository
 git clone https://github.com/BANADDA/model-deployment-platform
@@ -26,19 +23,16 @@ pip install -r requirements.txt
 # Configure environment
 cp .env.example .env
 # Edit .env with your configurations:
-# API_KEY=your_api_key
-# KUBERNETES_CONTEXT=your-context
-# MODEL_BASE_PATH=/path/to/models
+# HF_ACCESS_TOKEN=your_huggingface_token
 
-# Deploy platform
-chmod +x scripts/deploy.sh
-./scripts/deploy.sh
+# Fix permissions & start services
+sudo chmod 666 /var/run/docker.sock
+sudo docker-compose -f docker/docker-compose.yml up --build -d
 ```
 
 ## Usage Examples
 
 ### Python Client
-
 ```python
 from model_platform import ModelClient
 
@@ -47,11 +41,10 @@ client = ModelClient(api_key="your_key")
 
 # Deploy model
 deployment = client.deploy(
-    model="llama-3.1-70b-instruct",
+    model="llama2-70b",
     machine={
-        "gpu": "RTX 4090",
-        "region": "us-east-1",
-        "memory_gb": 24
+        "gpu": "A100",
+        "vram": "160GB"
     }
 )
 
@@ -59,7 +52,7 @@ print(deployment)
 # Output:
 # {
 #     "deployment_id": "dep_abc123",
-#     "endpoint": "https://api.polariscloud.com/v1/dep_abc123",
+#     "endpoint": "http://localhost:8000/v1/deployments/dep_abc123/predict",
 #     "status": "running"
 # }
 
@@ -72,60 +65,94 @@ response = client.generate(
 print(response)
 # Output:
 # {
-#     "text": "Quantum computing is...",
-#     "tokens_generated": 156,
-#     "inference_time": 0.8
+#     "deployment_id": "dep_abc123",
+#     "model": "llama2-70b",
+#     "prompt": "What is quantum computing?",
+#     "response": "Quantum computing is a type of computation that...",
+#     "tokens": 50
 # }
 ```
 
 ### API Endpoints
-
 ```bash
 # List models
 curl http://localhost:8000/v1/models
 
-# Create deployment
-curl -X POST http://localhost:8000/v1/deployments \
-  -H "Authorization: Bearer your_api_key" \
-  -d '{
-    "model": "llama-3.1-70b-instruct",
-    "machine": {
-      "gpu": "RTX 4090",
-      "region": "us-east-1"
+# Response:
+{
+    "llama2-70b": {
+        "status": "available",
+        "hardware_requirements": {
+            "gpu": "A100",
+            "vram": "160GB"
+        }
+    },
+    "llama2-7b": {
+        "status": "available",
+        "hardware_requirements": {
+            "gpu": "A100",
+            "vram": "40GB"
+        }
     }
-  }'
+}
 
-# Generate text
-curl -X POST http://localhost:8000/v1/completions \
-  -H "Authorization: Bearer your_api_key" \
-  -d '{
-    "deployment_id": "dep_abc123",
-    "prompt": "What is quantum computing?"
-  }'
+# Deploy model
+curl -X POST http://localhost:8000/v1/models/deploy \
+-H "Content-Type: application/json" \
+-d '{
+    "model_id": "llama2-70b",
+    "machine_config": {
+        "gpu": "A100",
+        "vram": "160GB"
+    }
+}'
+
+# Generate prediction
+curl -X POST http://localhost:8000/v1/deployments/dep_abc123/predict \
+-H "Content-Type: application/json" \
+-d '{
+    "prompt": "What is quantum computing?",
+    "max_tokens": 50
+}'
 ```
 
 ## Monitoring
 
-View deployment metrics:
+View metrics:
 ```bash
-kubectl get deployments
-kubectl logs deployment/model-server
+# Health check
+curl http://localhost:8000/health/
+# Response: {"status": "ok"}
+
+# System metrics
+curl http://localhost:8000/health/metrics
+# Response:
+{
+    "cpu_percent": 12.5,
+    "memory": {
+        "percent": 45.2,
+        "used": 7.3,
+        "total": 16.0
+    },
+    "disk": {
+        "percent": 68.3,
+        "used": 89.5,
+        "total": 256.0
+    }
+}
+
+# Container logs
+sudo docker logs docker-api-1
+sudo docker logs docker-model_server-1
 ```
 
-GPU utilization:
-```bash
-nvidia-smi
-```
+## Supported Models & Requirements
 
-## Supported Models
-- LLaMA 3.1 (70B, 7B)
-- GPT-2 (Base, Large)
-- DeepSek (33B)
-
-## Resource Requirements
-| Model | Min GPU | VRAM | Storage |
-|-------|---------|------|---------|
-| LLaMA 70B | A100 | 80GB | 150GB |
-| LLaMA 7B | RTX 4090 | 16GB | 15GB |
-| GPT-2 Large | RTX 3080 | 16GB | 6GB |
-```
+| Model | Min GPU | VRAM |
+|-------|---------|------|
+| LLaMa2 70B | A100 | 160GB |
+| LLaMa2 13B | A100 | 80GB |
+| LLaMa2 7B | A100 | 40GB |
+| DeepSeek 3B | RTX 3080 | 16GB |
+| DeepSeek 1B | RTX 2080 | 8GB |
+| GPT-2 | RTX 3080 | 16GB |

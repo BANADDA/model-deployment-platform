@@ -25,5 +25,9 @@ class Settings(BaseSettings):
     # Hugging Face
     hf_access_token: str
 
+    # Logs API Credentials
+    logs_api_username: str
+    logs_api_password: str
+
     class Config:         
         env_file = ".env"
