@@ -10,3 +10,5 @@ psutil==5.9.7
 GPUtil==1.4.0
 python-dotenv==1.0.0
 pydantic-settings==2.1.0
+python-multipart
+accelerate

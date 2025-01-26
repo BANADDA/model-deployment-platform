@@ -40,34 +40,42 @@ class PredictResponse(BaseModel):
 
 
 AVAILABLE_MODELS = {
-    "llama-3.1-70b": {
-        "status": "available",
-        "hardware_requirements": {"gpu": "A100", "vram": "80GB"}
-    },
-    "llama2-7b": {
-        "status": "available",
-        "hardware_requirements": {"gpu": "A100", "vram": "40GB"}
-    },
-    "llama2-13b": {
-        "status": "available",
-        "hardware_requirements": {"gpu": "A100", "vram": "80GB"}
-    },
-    "llama2-70b": {
-        "status": "available",
-        "hardware_requirements": {"gpu": "A100", "vram": "160GB"}
-    },
-    "gpt2": {
-        "status": "available",
-        "hardware_requirements": {"gpu": "RTX 3080", "vram": "16GB"}
-    },
-    "deepseek-1b": {
-        "status": "available",
-        "hardware_requirements": {"gpu": "RTX 2080", "vram": "8GB"}
-    },
-    "deepseek-3b": {
-        "status": "available",
-        "hardware_requirements": {"gpu": "RTX 3080", "vram": "16GB"}
-    }
+   "llama2-70b": {
+       "status": "available",
+       "hardware_requirements": {"gpu": "A100", "vram": "160GB"}
+   },
+   "llama2-13b": {
+       "status": "available", 
+       "hardware_requirements": {"gpu": "A100", "vram": "80GB"}
+   },
+   "llama2-7b": {
+       "status": "available",
+       "hardware_requirements": {"gpu": "A100", "vram": "40GB"}
+   },
+   "deepseek-67b-chat": {
+       "status": "available",
+       "hardware_requirements": {"gpu": "A100", "vram": "80GB"}
+   },
+   "deepseek-7b-chat": {
+       "status": "available",
+       "hardware_requirements": {"gpu": "A100", "vram": "40GB"}  
+   },
+   "deepseek-coder-33b": {
+       "status": "available",
+       "hardware_requirements": {"gpu": "A100", "vram": "48GB"}
+   },
+   "deepseek-coder-6.7b": {
+       "status": "available",
+       "hardware_requirements": {"gpu": "RTX 4090", "vram": "24GB"}
+   },
+   "deepseek-coder-1.3b": {
+       "status": "available",
+       "hardware_requirements": {"gpu": "RTX 3080", "vram": "10GB"}
+   },
+   "gpt2": {
+       "status": "available",
+       "hardware_requirements": {"gpu": "RTX 2080", "vram": "8GB"}
+   }
 }
 
 

@@ -89,13 +89,16 @@ class ModelWrapper:
         """
         # Define a mapping from model identifiers to HF repo names
         model_repo_mapping = {
-            "llama-3.1-70b": "meta-llama/Llama-3.1-70b-chat-hf",
-            "llama2-7b": "meta-llama/Llama-2-7b-chat-hf",
-            "llama2-13b": "meta-llama/Llama-2-13b-chat-hf",
-            "llama2-70b": "meta-llama/Llama-2-70b-chat-hf",
-            "deepseek-1b": "deepseek-ai/deepseek-1b",
-            "deepseek-3b": "deepseek-ai/deepseek-3b",
-        }
+    "llama-3.1-70b": "meta-llama/Llama-3.1-70b-chat-hf",
+    "llama2-7b": "meta-llama/Llama-2-7b-chat-hf",
+    "llama2-13b": "meta-llama/Llama-2-13b-chat-hf",
+    "llama2-70b": "meta-llama/Llama-2-70b-chat-hf",
+    "deepseek-67b-chat": "deepseek-ai/deepseek-llm-67b-chat",
+    "deepseek-7b-chat": "deepseek-ai/deepseek-llm-7b-chat",
+    "deepseek-coder-33b": "deepseek-ai/deepseek-coder-33b-instruct",
+    "deepseek-coder-6.7b": "deepseek-ai/deepseek-coder-6.7b-instruct",
+    "deepseek-coder-1.3b": "deepseek-ai/deepseek-coder-1.3b-instruct"
+       }
 
         repo_name = model_repo_mapping.get(model_id.lower())
         if not repo_name:
